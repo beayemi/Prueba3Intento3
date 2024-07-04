@@ -52,7 +52,7 @@
                 {% else %}
                     <li class="nav-item">
                 {% endif %}
-                        <a class="nav-link" href="{% url 'customer_create' %}">Mantenedor de Usuarios</a>
+                        <a class="nav-link" href="{% url 'customer_create' %}">Crear cuenta</a>
                     </li>
             {% endif %}
             {% if clase == 'gestion_clientes' %}
@@ -60,7 +60,7 @@
             {% else %}
                 <li class="nav-item">
             {% endif %}
-                    <a class="nav-link" href="{% url 'contract_list' %}">Gestión de Clientes</a>
+                    <a class="nav-link" href="{% url 'contract_list' %}">Contratar Paquete</a>
                 </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Gestión de Contratos</a>
