@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Contract, Customer
-from .forms import ContractForm, CustomerForm, UserForm
+from django.contrib.auth.models import User
+from .models import Contract, Customer, Contact
+from .forms import ContractForm, CustomerForm, UserForm, ContactForm
 
 @login_required
 def contract_list(request):
@@ -67,3 +67,20 @@ def add_contract_to_cart(request):
     else:
         form = ContractForm()
     return render(request, 'add_contract_to_cart.html', {'form': form})
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('contact_success')
+    else:
+        form = ContactForm()
+    return render(request, 'gestionviajes/contact.html', {'form': form})
+
+def contact_success(request):
+    return render(request, 'gestionviajes/contact_success.html')
+
+def index(request):
+    context={}
+    return render(request,'gestionviajes/index.html', context)

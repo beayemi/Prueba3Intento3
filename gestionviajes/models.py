@@ -18,3 +18,14 @@ class Contract(models.Model):
 
     def __str__(self):
         return f"{self.customer.name} - {self.destination}"
+
+class Contact(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+    country = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    message = models.TextField()
+
+    def __str__(self):
+        return self.name
