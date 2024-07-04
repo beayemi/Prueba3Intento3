@@ -1,8 +1,38 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Contract, Customer, Contact
-from .forms import ContractForm, CustomerForm, UserForm, ContactForm
+from .models import Contract, Customer, Contact, Cart
+from .forms import ContractForm
+
+@login_required
+def add_contract_to_cart(request):
+    if request.method == 'POST':
+        form = ContractForm(request.POST)
+        if form.is_valid():
+            # Guardar el contrato en la base de datos
+            contract = form.save(commit=False)
+            
+            # Obtener o crear el cliente asociado al usuario actual
+            customer, created = Customer.objects.get_or_create(user=request.user)
+            contract.customer = customer
+            contract.save()
+            
+            # Agregar el contrato al carrito del usuario
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            cart.contracts.add(contract)
+            cart.save()
+
+            return redirect('carrito')  # Redirige al carrito después de agregar
+    else:
+        form = ContractForm()
+
+@login_required
+def carrito(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    items = cart.contracts.all()
+    total = sum(item.price for item in items)
+
+    return render(request, 'carrito.html', {'items': items, 'total': total})
 
 @login_required
 def contract_list(request):
@@ -46,28 +76,6 @@ def customer_create(request):
         'customer_form': customer_form
     })
 
-@login_required
-def add_contract_to_cart(request):
-    if request.method == "POST":
-        form = ContractForm(request.POST)
-        if form.is_valid():
-            contract = form.save(commit=False)
-            user = User.objects.create_user(
-                username=form.cleaned_data['rut'],
-                password='defaultpassword',
-            )
-            customer = Customer.objects.create(
-                user=user,
-                rut=form.cleaned_data['rut'],
-                name=form.cleaned_data['name']
-            )
-            contract.customer = customer
-            contract.save()
-            return redirect('contract_list')
-    else:
-        form = ContractForm()
-    return render(request, 'add_contract_to_cart.html', {'form': form})
-
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -82,8 +90,8 @@ def contact_success(request):
     return render(request, 'gestionviajes/contact_success.html')
 
 def index(request):
-    context={}
-    return render(request,'gestionviajes/index.html', context)
+    context = {}
+    return render(request, 'gestionviajes/index.html', context)
 
 def crud_usuarios(request):
     users = User.objects.all()
@@ -91,3 +99,7 @@ def crud_usuarios(request):
         'users': users
     }
     return render(request, 'gestionviajes/usuarios.html', context)
+
+def procesar_pago(request):
+    # Lógica para procesar el pago
+    return render(request, 'gestionviajes/procesar_pago.html')
