@@ -84,3 +84,10 @@ def contact_success(request):
 def index(request):
     context={}
     return render(request,'gestionviajes/index.html', context)
+
+def crud_usuarios(request):
+    users = User.objects.all()
+    context = {
+        'users': users
+    }
+    return render(request, 'gestionviajes/usuarios.html', context)
