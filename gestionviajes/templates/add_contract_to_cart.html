@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Contract to Cart</title>
+</head>
+<body>
+    <h1>Add Contract to Cart</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add to Cart</button>
+    </form>
+</body>
+</html>

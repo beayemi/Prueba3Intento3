@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contracts List</title>
+</head>
+<body>
+    <h1>Contracts List</h1>
+    <a href="{% url 'add_contract_to_cart' %}">Add Contract</a>
+    <ul>
+        {% for contract in contracts %}
+            <li>{{ contract.customer.name }} - {{ contract.destination }} 
+                <a href="{% url 'contract_edit' contract.pk %}">Edit</a>
+                <a href="{% url 'contract_delete' contract.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
